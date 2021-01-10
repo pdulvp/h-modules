@@ -22,8 +22,11 @@ var fsh = {
     move: function (oldPath, newPath) {
       return new Promise(function(resolve, reject) {
           fs.rename(oldPath, newPath, function (err) {
-              if (err) reject(err);
-              else resolve(newPath);
+              if (err) {
+                  reject(err);
+              } else {
+                  resolve(newPath);
+              }
           });
       });
     },
@@ -34,8 +37,11 @@ var fsh = {
                 data = JSON.stringify(data, null, " ");
             }
             fs.writeFile(filename, data, 'UTF-8', function(err) {
-                if (err) reject(err);
-                else resolve(data);
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(data);
+                }
             });
         });
     },
@@ -62,29 +68,40 @@ var fsh = {
             fs.readFile(filename, 'UTF-8', function(err, data){
                 if (err) {
                     reject(err); 
-                }
-                else 
+                } else {
                     resolve(data);
+                }
             });
         });
     },
   
     fileExists: function(filename) {
-        try
-        {
+        try {
             return fs.statSync(filename).isFile();
-        }
-        catch (err)
-        {
-            if (err.code == 'ENOENT') { // no such file or directory. File really does not exist
+
+        } catch (err) {
+            if (err.code == 'ENOENT') {
                 console.log("File does not exist.");
                 return false;
             }
-            //console.log("Exception fs.statSync (" + path + "): " + err);
-            return false; // something else went wrong, we don't have rights, ...
+            return false;
         }
-    }	
-  
+    },
+
+    getFiles: function(folder) {
+        return new Promise(function(resolve, reject) {
+            fs.readdir(folder, (err, subdirs) => {
+                Promise.all(subdirs.map(subdir => {
+                    const res = path.join(folder, subdir);
+                    return (fs.statSync(res)).isDirectory() ? getFiles(res) : res;
+
+                })).then(files => {
+                    resolve(files.reduce((a, f) => a.concat(f), []));
+                })
+            });
+        });
+    }
+
   };
 
   module.exports = fsh;
