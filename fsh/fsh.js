@@ -8,6 +8,7 @@
  @author: pdulvp@laposte.net
 */
 const fs = require('fs');
+const path = require('path')
 
 var fsh = {
   
@@ -93,7 +94,7 @@ var fsh = {
             fs.readdir(folder, (err, subdirs) => {
                 Promise.all(subdirs.map(subdir => {
                     const res = path.join(folder, subdir);
-                    return (fs.statSync(res)).isDirectory() ? getFiles(res) : res;
+                    return (fs.statSync(res)).isDirectory() ? fsh.getFiles(res) : res;
 
                 })).then(files => {
                     resolve(files.reduce((a, f) => a.concat(f), []));
