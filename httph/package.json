@@ -1,0 +1,13 @@
+{
+  "name": "@pdulvp/httph",
+  "version": "1.0.0",
+  "repository":"https://github.com/pdulvp/h-modules",
+  "description": "",
+  "main": "httph.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "pdulvp",
+  "license": "CC-BY-NC-SA-4.0",
+  "dependencies": {}
+}
