@@ -37,6 +37,9 @@ var fsh = {
             if (!(typeof data === 'string' || data instanceof String)) {
                 data = JSON.stringify(data, null, " ");
             }
+            if (!fs.existsSync(path.dirname(filename))){
+                fs.mkdirSync(path.dirname(filename), { recursive: true });
+            }
             fs.writeFile(filename, data, 'UTF-8', function(err) {
                 if (err) {
                     reject(err);
@@ -50,6 +53,9 @@ var fsh = {
     writeIfChange: function (filename, data) {
         if (!(typeof data === 'string' || data instanceof String)) {
             data = JSON.stringify(data, null, " ");
+        }
+        if (!fs.existsSync(path.dirname(filename))){
+            fs.mkdirSync(path.dirname(filename), { recursive: true });
         }
         if (fsh.fileExists(filename)) {
             return fsh.read(filename).then(e => {
